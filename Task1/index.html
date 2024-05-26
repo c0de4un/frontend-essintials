@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>ДЗ №1: Таблица с художниками</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <div class="col w-full h-full">
+      <div class="row w-full justify-center">
+        <table
+          id="main-table"
+          class="table"
+        >
+          <thead>
+            <tr>
+              <th>Имя</th>
+              <th>Годы жизни</th>
+              <th>Фото</th>
+              <th>Список известных работ</th>
+            </tr>
+          </thead>
+          <tbody id="main-table-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      class TableManager {
+        static _instance = null;
+        TABLE_ID = 'main-table';
+        TBODY_ID = 'main-table-tbody';
+        COLS = [
+          { key: 'name' },
+          { key: 'years', is_cursive: true },
+          { key: 'image', type: 'img' },
+          { key: 'works', type: 'array' }
+        ];
+
+        /**
+         * @type {HTMLTableElement|null}
+         * @private
+         */
+        _table = null;
+
+        /**
+         *
+         * @type {HTMLElement|null}
+         * @private
+         */
+        _tbody = null;
+
+        _artists = [
+          {
+            name: 'Леонардо да Винчи',
+            years: '1452-1519',
+            works: ['Мона Лиза', 'Тайная вечеря', 'Витрувианский человек'],
+            image: {
+              src: 'assets/images/Portrait-Leonardo-da-Vinci.jpg',
+              alt: 'Leonardo-da-Vinci',
+            }
+          },
+          {
+            name: 'Микеланджело',
+            years: '1475-1564',
+            works: ['Сикстинская капелла', 'Давид', 'Пьета'],
+            image: {
+              src: 'assets/images/michelangelo.jpg',
+              alt: 'Michelangelo'
+            }
+          },
+          {
+            name: 'Рафаэль Санти',
+            years: '1483-1520',
+            works: ['Школа Афин', 'Сикстинская мадонна', 'Ватиканские станцы']
+          },
+          {
+            name: 'Тициан',
+            years: 'ок. 1488/1490-1576',
+            works: ['Венера Урбинская', 'Святой Себастьян', 'Даная']
+          },
+          {
+            name: 'Рембрандт Харменс ван Рейн',
+            years: '1606-1669',
+            works: ['Ночной дозор', 'Урок анатомии доктора Тульпа', 'Возвращение блудного сына']
+          },
+          {
+            name: 'Питер Пауль Рубенс',
+            years: '1577-1640',
+            works: ['Похищение дочерей Левкиппа', 'Персей и Андромеда', 'Охота на львов']
+          },
+          {
+            name: 'Анри Матисс',
+            years: '1869-1954',
+            works: ['Красная комната', 'Женщина в голубом', 'Танец']
+          },
+          {
+            name: 'Пабло Пикассо',
+            years: '1881-1973',
+            works: ['Авиньонские девицы', 'Герника', 'Голубка мира']
+          }
+        ];
+
+        static getInstance() {
+          if (!TableManager._instance) {
+            TableManager._instance = new TableManager();
+          }
+
+          return TableManager._instance;
+        }
+
+        renderData() {
+          this._table = document.getElementById(this.TABLE_ID);
+          this._tbody = document.getElementById(this.TBODY_ID);
+
+          /** @type {string[]|string|number} */
+          let colVal;
+
+            /** @type {HTMLTableRowElement} */
+          let row;
+
+          /** @type {HTMLTableCellElement} */
+          let cell;
+
+          /** @type {HTMLImageElement} */
+          let img;
+
+          this._artists.forEach(artist => {
+            row = document.createElement('tr');
+            row.style.color = this._genHexColor();
+
+            this.COLS.forEach(col => {
+                cell = document.createElement('td');
+
+                colVal = artist[col.key] || null;
+                if (!colVal) {
+                  // NO-DATA
+                  cell.innerHTML = 'Н/Д';
+                  cell.style.backgroundColor = this._genHexColor();
+                  row.append(cell);
+                  return;
+                }
+
+                if (Array.isArray(colVal) && col.type === 'array') {
+                    colVal = colVal.join('<br />');
+                }
+
+                if (col.type === 'img') {
+                    console.log('colVal=', colVal);
+                  img = document.createElement('img');
+                  img.alt = colVal.alt || 'image';
+                  img.src = colVal.src;
+                  cell.append(img);
+                } else {
+                  cell.innerHTML = colVal;
+
+                  if (col.is_cursive) {
+                      cell.style.fontStyle = 'italic';
+                  }
+                }
+
+                cell.style.backgroundColor = this._genHexColor();
+
+                row.append(cell);
+            });
+
+            this._tbody.append(row);
+          });
+        }
+
+        _genHexColor() {
+          const hexDigits = '0123456789ABCDEF';
+          let color = '#';
+
+          for (let i = 0; i < 6; i++) {
+              color += hexDigits[Math.floor(Math.random() * 16)];
+          }
+
+          return color;
+        }
+      }
+
+      window.onload = () => {
+        TableManager.getInstance().renderData();
+      };
+    </script>
+  </body>
+</html>
