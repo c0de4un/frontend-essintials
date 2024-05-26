@@ -1,0 +1,56 @@
+.container-1 {
+    width: 500px;
+    height: 300px;
+    background-color: red;
+    position: relative;
+    margin-top: 100px;
+}
+
+.child-1 {
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+    position: static;
+}
+
+.child-2 {
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    position: relative;
+    left: 10px;
+    top: 10px;
+}
+
+.child-3 {
+    width: 50px;
+    height: 50px;
+    background-color: brown;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+
+.child-4 {
+    width: 50px;
+    height: 50px;
+    background-color: violet;
+    position: fixed;
+    left: 10px;
+    top: 10px;
+}
+
+.button {
+    background-color: aquamarine;
+    height: 70px;
+    width: 100px;
+}
+
+.button:hover {
+    background-color: blue;
+}
+
+.button:active {
+    background-color: red;
+}
